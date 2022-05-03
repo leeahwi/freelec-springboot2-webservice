@@ -43,5 +43,8 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.projectlombok:lombok'
 
+    implementation('org.springframework.boot:spring-boot-starter-mustache')
+    testImplementation('org.springframework.boot:spring-boot-starter-mustache')
+
 }
 
