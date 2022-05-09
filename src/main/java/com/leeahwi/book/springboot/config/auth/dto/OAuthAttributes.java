@@ -4,6 +4,7 @@ import com.leeahwi.book.springboot.domain.user.Role;
 import com.leeahwi.book.springboot.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 
 import java.util.Map;
 
@@ -29,6 +30,9 @@ public class OAuthAttributes {
     public static OAuthAttributes of(String registrationId,
                                      String userNameAttributeName,
                                      Map<String,Object> attributes){
+        if("naver".equals(registrationId)){
+            return ofNaver("id",attributes);
+        }
 
         return ofGoogle(userNameAttributeName,attributes);
     }
@@ -39,6 +43,19 @@ public class OAuthAttributes {
                 .email((String) attributes.get("email"))
                 .picture((String) attributes.get("picture"))
                 .attributes(attributes)
+                .nameAttributeKey(userNameAttributeName)
+                .build();
+    }
+
+    //response.get 안하고 attributes.get 하니 naver 로그인 회원 결과가 resultCode,message,response 세 타입이라서
+    //이중 response 타입 선택 안하고 get하니 당연히 값이 없는것
+    public static OAuthAttributes ofNaver(String userNameAttributeName, Map<String,Object> attributes){
+        Map<String,Object> response = (Map<String,Object>)attributes.get("response");
+        return OAuthAttributes.builder()
+                .name((String)response.get("name"))
+                .email((String)response.get("email"))
+                .picture((String)response.get("profileImage"))
+                .attributes(response)
                 .nameAttributeKey(userNameAttributeName)
                 .build();
     }
