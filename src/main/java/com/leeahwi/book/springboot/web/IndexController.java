@@ -1,4 +1,5 @@
 package com.leeahwi.book.springboot.web;
+import com.leeahwi.book.springboot.config.auth.LoginUser;
 import com.leeahwi.book.springboot.config.auth.dto.SessionUser;
 import com.leeahwi.book.springboot.domain.user.User;
 import com.leeahwi.book.springboot.service.posts.PostsService;
@@ -25,10 +26,8 @@ public class IndexController {
     //mustache starter 덕분에 앞의 경로와 뒤의 확장자는 자동으로 지정
     //사실상 '/'가 아닌 /src/main/resouces/templates 에 뒷 확장자 .mustache 붙음 여기서든 index 반환하므로 index.mustache
     @GetMapping("/")
-    public String index(Model model) {
+    public String index(Model model, @LoginUser SessionUser user) {
         model.addAttribute("posts",postsService.findAllDesc());
-
-        SessionUser user = (SessionUser)httpSession.getAttribute("user");
 
         if(user != null){
             model.addAttribute("userName",user.getName());
